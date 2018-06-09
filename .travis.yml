@@ -1,25 +1,14 @@
 language: emacs-lisp
-# Emacs fails to build using the latest Trusty image on Travis
-# See https://github.com/travis-ci/travis-ci/issues/9073
-sudo: required
-dist: trusty
-group: deprecated-2017Q4
-cache:
-  - directories:
-      - "$HOME/emacs/"
-matrix:
-  fast_finish: true
-  allow_failures:
-    - env: EMACS_VERSION=snapshot
+sudo: no
 env:
-  - EMACS_VERSION=25.3
-  - EMACS_VERSION=snapshot
-before_install:
-  - export PATH="$HOME/bin:$PATH"
-  - wget 'https://raw.githubusercontent.com/flycheck/emacs-travis/master/emacs-travis.mk'
-  - make -f emacs-travis.mk install_emacs
-  - make -f emacs-travis.mk install_cask
+  - EVM_EMACS=emacs-25.1-travis
+  - EVM_EMACS=emacs-25.2-travis
+  - EVM_EMACS=emacs-25.3-travis
+  - EVM_EMACS=emacs-26.1-travis
+  - EVM_EMACS=emacs-git-snapshot-travis
 install:
+  - curl -fsSkL https://gist.github.com/rejeep/ebcd57c3af83b049833b/raw > travis.sh && source ./travis.sh
+  - evm install $EVM_EMACS --use --skip
   - cask install
 script:
   - make compile
